@@ -3,11 +3,11 @@ Flask-Login
 ===========
 .. currentmodule:: flask_login
 
-Flask-Login 为 Flask 提供了用户 session 管理。它能够处理登录，注销和长时间记住用户 session 等常用任务。
+Flask-Login 为 Flask 提供对用户 session 的管理。它能够处理登录，注销和长时间记住用户 session 等常用任务。
 
 它会:
 
-- 在 session 中存储活动用户的ID，并让你轻松实现用户的登录和注销。
+- 在 session 中存储活动用户的 ID，并让你轻松实现用户的登录和注销。
 - 让你可以限制视图只对已登录用户可用。
 - 处理通常会很麻烦的“记住我”功能。
 - 帮助保护用户 session 不被 cookie 窃贼偷窃。
@@ -32,8 +32,8 @@ Flask-Login 为 Flask 提供了用户 session 管理。它能够处理登录，�
     $ pip install flask-login
 
 
-配置你的应用程序
-================
+配置应用程序
+============
 对于一个应用来说，使用 Flask-Login 最重要的部分是 `LoginManager` 类。你应该在代码中的某个位置为应用程序创建一个类实例，像这样::
 
     login_manager = LoginManager()
@@ -60,7 +60,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
 如果 ID 无效，函数应该返回 `None` (**而不是唤起异常**) 。
 这样 ID 将从 session 中被手动移除且程序可以继续执行。）
 
-你的用户类
+定义用户类
 ==========
 你用来表示用户的类需要实现以下属性和方法：
 
@@ -68,15 +68,15 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
     如果用户已通过认证这个属性应该返回 `True` ，即用户已经提供有效的身份凭证。（只有通过认证的用户才会满足 `login_required` 条件。）
 
 `is_active`
-    如果这是一个活跃的用户这个属性应该返回 `True` - 也就是说用户除了通过验证以外，还激活了账号，且账号没有被暂停或者处于任何应用程序用来拒绝账号的状态。不活跃用户将不能登录（除非被强制登录）。（译注：关于强制登录 API 中会有介绍）
+    如果这是一个活跃的用户这个属性应该返回 `True` - 也就是说用户除了通过验证以外，还激活了账号，且账号没有被暂停或者处于任何应用程序用来封禁账号的状态。不活跃用户将不能登录（除非被强制登录）。（译注：关于强制登录 API 中会有介绍）
 
 `is_anonymous`
     如果这是一个匿名用户这个属性应该返回 `True`。 (实际存在的用户应该返回 `False`。)
 
 `get_id()`
-    这个方法必须返回一个唯一标识用户的 `unicode`，并且返回的 `unicode` 能够在 `~LoginManager.user_loader` 回调函数中用来加载用户。注意返回的值 **必须** 是 `unicode` - 如果ID本来是 `int` 类型或者其他类型，你需要将它转换为 `unicode`.
+    这个方法必须返回一个唯一标识用户的 `unicode`，并且返回的 `unicode` 能够在 `~LoginManager.user_loader` 回调函数中用来加载用户。注意返回的值 **必须** 是 `unicode` - 如果 ID 本来是 `int` 类型或者其他类型，你需要将它转换为 `unicode`。
 
-为了让实现用户类更轻松，你可以从 `UserMixin` 类继承，它提供了以上所有属性和方法的默认实现。（但这不是必需的，你可以自己实现）
+为了让实现用户类更轻松，你可以从 `UserMixin` 类继承用户类，它提供了以上所有属性和方法的默认实现。（但这不是必需的，你可以自己实现）
 
 登录示例
 ========
@@ -94,8 +94,8 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
         # 我们使用自定义的 LoginForm 来验证表单数据。
         form = LoginForm()
         if form.validate_on_submit():
-            # Login and validate the user.
-            # user should be an instance of your `User` class
+            # 登录并且验证用户
+            # user 应该是你 `User` 类的一个实例
             login_user(user)
 
             flask.flash('Logged in successfully.')
@@ -132,14 +132,14 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
         logout_user()
         return redirect(somewhere)
 
-用户将会被注销，并且所有保存他们 session 的 cookie 会被清除。
+用户将会被注销，并且任何保存他们 session 的 cookie 都会被清理。
 
 
 
 自定义登录流程
 ==============
 默认情况下，当一个未登录的用户试图访问一个 `login_required` 的视图时，Flask-Login 将会闪现一条信息并将用户重定向到登录视图。（如果没有设置登录视图，将会报401错误）
-登录视图的名称（译注：url 或端点）可以被设置为 `LoginManager.login_view`。例如::
+登录视图的名称（译注：url 或端点）应该被设置为 `LoginManager.login_view`。例如::
 
     login_manager.login_view = "users.login"
 
@@ -151,7 +151,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
 
     login_manager.login_message_category = "info"
 
-重定向到登录视图后，（当前url）查询字符串中会有一个 ``next`` 变量，变量中保存着用户试图访问的页面地址。另外，如果 `USE_SESSION_FOR_NEXT` 配置参数为 `True`，试图访问的页面地址将会保存在 session 的 ``next`` 键中。
+重定向到登录视图后，（当前url）查询字符串中会有一个 ``next`` 变量，变量中保存着用户试图访问的页面地址。如果 `USE_SESSION_FOR_NEXT` 配置参数为 `True`，试图访问的页面地址将会保存在 session 的 ``next`` 键中。
 
 如果你想更进一步的自定义流程，用 `LoginManager.unauthorized_handler` 来装饰处理函数::
 
@@ -167,7 +167,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
 .. Caution::
    这个方法将被弃用；请使用下面的 `~LoginManager.request_loader` 作为替代。
 
-有时你想使用 `Authorization` 首部字段来支持 Basic Auth 登录，比如用于 api 请求。你需要提供一个 `~LoginManager.header_loader` 回调函数来支持通过请求的首部字段登录。这个回调函数应该和你的 `~LoginManager.user_loader` 回调函数基本一样，但是它接收一个首部字段值而不是用户 id。例如::
+有些场景你想使用 `Authorization` 首部字段来支持 Basic Auth 登录，比如用于 api 请求。你需要提供一个 `~LoginManager.header_loader` 回调函数来支持通过请求的首部字段登录。这个回调函数应该和你的 `~LoginManager.user_loader` 回调函数基本相同，但是它接收一个首部字段值而不是用户 id。例如::
 
     @login_manager.header_loader
     def load_user_from_header(header_val):
@@ -183,7 +183,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
 
 使用 Request Loader 自定义登录
 ==============================
-有时你想在不使用 cookies 的情况下登录用户，例如使用请求首部或者作为查询参数传递的 api key。在这些情况下，你应该使用 `~LoginManager.request_loader` 回调函数。这个回调函数和 `~LoginManager.user_loader` 回调函数基本一样，但是它接收 Flask 请求而不是用户 id。
+有些场景你想在不使用 cookies 的情况下登录用户，例如使用请求首部或者作为查询参数传递的 api key。在这些情况下，你应该使用 `~LoginManager.request_loader` 回调函数。这个回调函数和 `~LoginManager.user_loader` 回调函数基本相同，但是它接收 Flask 请求而不是用户 id。
 
 例如，为了支持通过 url 参数和使用 `Authorization` 首部字段的 Basic Auth 进行登录::
 
@@ -228,11 +228,11 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
 
 记住我
 ======
-默认情况下，当用户关闭浏览器时，Flask Session 会被删除，用户将被注销。“记住我” 防止用户关闭他们的浏览器时被意外注销。这**不是**用户注销后在登录表单中会记住或自动填写用户的用户名或密码的意思（译注：即不是浏览器提供的自动填充功能）。
+默认情况下，当用户关闭浏览器时，Flask Session 会被删除，用户将被注销。“记住我” 防止用户关闭他们的浏览器时被意外注销。这 **不是** 用户注销后在登录表单中会记住或自动填写用户的用户名或密码的意思（译注：即不是浏览器提供的自动填充功能）。
 
 “记住我”功能的实现可能会很麻烦。但是 Flask-Login 使该过程变得简单明了--你只需要在调用 `login_user` 时传入 ``remember=True`` 即可。一个 cookie 将会保存到用户的电脑，然后 Flask-Login 将会在用户 ID 不在 session 中时自动地从该 cookie 中恢复用户 ID。cookie 的过期时长可以通过 `REMEMBER_COOKIE_DURATION` 配置或者直接将时长传入 `login_user` 来设置。这个 cookie 是防篡改的，所以如果用户篡改了它（如使用别的用户ID来代替自己的），Flask-Login 将不会使用这个 cookie。
 
-这个层面的功能将会被自动处理。但是，你能够（如果你的应用将处理任何的敏感数据，则是应该）提供额外的设置来增加记住我 cookie 的安全性。
+这个层级的功能将会自动运行。但是，你能够（如果你的应用将处理任何的敏感数据，则是应该）提供额外的设置来增加记住我 cookie 的安全性。
 
 
 可选令牌值
@@ -248,12 +248,12 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
     def get_id(self):
         return unicode(self.alternative_id)
 
-这样，当用户更改他们的密码时，你可以将用户另外的 id 更改为一个新的随机生成值，以确保他们原来的验证 session 将不再有效。注意这个另外的 id 依然唯一标识用户... 可以把它当成第二个用户 ID。
+这样，当用户更改他们的密码时，你可以将用户另外的 id 更改为一个新的随机生成值，以确保他们原来的验证 session 将不再有效。注意这个另外的 id 依然需要唯一标识用户... 可以把它当成第二个用户 ID。
 
 
 “新鲜”登录
 ==========
-当一个用户登录时，它的登录 session 会被标记为“新鲜”（译注：在session中添加 _fresh 字段），表明他们实际是在该 session 中通过了身份验证。当他们的 session 被销毁然后通过“记住我” cookie 登录回来时，会被标记为“不新鲜”。`login_required` 不会区分新鲜状态，对大多数页面来说这样没有问题。然而，类似于更改个人信息这样的敏感操作应该需要“新鲜”登录。（而像修改密码这样的操作不管怎样应该总是需要重新输入原密码。）
+当一个用户登录时，它的登录 session 会被标记为“新鲜”（译注：在session中添加 _fresh 字段），表明他们实际是在该 session 中通过了身份验证。当他们的 session 被销毁然后通过“记住我” cookie 登录回来时，session 会被标记为“不新鲜”。`login_required` 不会区分新鲜状态，对大多数页面来说这样没有问题。然而，类似于更改个人信息这样的敏感操作应该需要“新鲜”登录。（而像修改密码这样的操作不管怎样应该总是需要重新输入原密码。）
 
 `fresh_login_required` 除了验证用户已经登录，还将确保他们的登录为“新鲜”状态。如果不是，它会将他们重定向到一个可以重新输入凭证的页面。你可以就像自定义 `login_required` 的方式一样，通过设置 `LoginManager.refresh_view`，`~LoginManager.needs_refresh_message`，以及
 `~LoginManager.needs_refresh_message_category` 自定义这类行为::
@@ -283,7 +283,7 @@ Cookie 的细节可以在应用程序的配置中自定义。
                                        **默认值：** ``remember_token``
 `REMEMBER_COOKIE_DURATION`             cookie 的过期时长，值为 `datetime.timedelta` 对象或整数秒数。
                                        **默认值：** 365天（一个非闰阳历年）
-`REMEMBER_COOKIE_DOMAIN`               如果“记住我”的 cookie 要跨域，在这里设置域名值。(即 ``.example.com`` 将会允许cookie用于所有 ``example.com`` 的子域名）**默认值：** `None`
+`REMEMBER_COOKIE_DOMAIN`               如果“记住我”的 cookie 要跨域，在这里设置域名值。(即 ``.example.com`` 将会允许cookie用于所有 ``example.com`` 的子域名） **默认值：** `None`
 `REMEMBER_COOKIE_PATH`                 限制“记住我” cookie 在一个固定的路径。
                                        **默认值：** ``/``
 `REMEMBER_COOKIE_SECURE`               限制“记住我” cookie 仅作用于加密通道（通常是HTTPS）。
@@ -296,11 +296,11 @@ Cookie 的细节可以在应用程序的配置中自定义。
 ====================================== =================================================
 
 
-Session 保护
-============
+Session 的保护
+==============
 虽然上述功能有助于保护你的“记住我”令牌不被 cookie 窃贼偷窃，但是 session cookie依然容易受到攻击。Flask-Login 包含了 session 保护功能来防止用户的 session 被偷窃。
 
-你可以在 `LoginManager` 和应用程序配置参数中设置 session 保护。如果启用了 session 保护，它可以运行在 `basic` 或者 `strong` 模式。设置方式是在 `LoginManager` 设置 `~LoginManager.session_protection` 属性的值为 ``"basic"`` 或者 ``"strong"``::
+你可以在 `LoginManager` 和应用程序配置参数中设置 session 保护。如果启用了 session 保护，它将运行在 `basic` 或者 `strong` 模式。设置方式是在 `LoginManager` 设置 `~LoginManager.session_protection` 属性的值为 ``"basic"`` 或者 ``"strong"``::
 
     login_manager.session_protection = "strong"
 
@@ -311,9 +311,9 @@ Session 保护
 默认情况下， session 保护被启动为 ``"basic"`` 模式。在应用程序配置中将 `SESSION_PROTECTION` 配置参数设置为 `None`，
 ``"basic"`` 或 ``"strong"`` 可以禁用它或更改工作模式。
 
-当 session 保护被启用时，每个请求都会为用户的计算机生成一个标识符（主要是对IP地址和用户代理的加密 hash）。 如果一个 session 没有关联的标识符，则将生成标识符并存储在 session 中。 如果它有一个标识符，并且与生成的标识符相匹配，则请求被判断为是有效的。（译注：同一IP地址和用户代理生成的哈希值总是相同的）
+当 session 保护被启用时，每个请求都会为用户的计算机生成一个标识符（主要是对IP地址和用户代理的加密 hash）。 如果 session 中没有相关联的标识符，则会将生成的标识符存储在 session 中。 如果它有一个标识符，并且与当前请求生成的标识符相匹配，则该请求正常进行。（译注：同一IP地址和用户代理生成的哈希值总是相同的）
 
-如果标识符在 `basic` 模式下不匹配，或者当 session 是永久的，session 会被直接标记成”不新鲜“， 任何需要“”新鲜“登录的请求都会强制要求用户重新认证。（当然，你必须已经在适当的地方启用了”新鲜“登录才会生效）
+如果标识符在 `basic` 模式下不匹配，或者当 session 是永久的，session 会被直接标记成”不新鲜“， 任何需要“”新鲜“登录的请求都会强制要求用户重新认证。（当然，你必须已经在适当的地方启用了”新鲜“登录这才会有作用）
 
 如果非永久 session 中的标识符在 `strong` 模式下不匹配，整个 session （以及可能存在的记住我令牌）会被删除。
 
