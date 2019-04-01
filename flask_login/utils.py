@@ -149,7 +149,7 @@ def login_user(user, remember=False, duration=None, force=False, fresh=True):
     :type duration: :class:`datetime.timedelta`
     :param force: 如果用户处于不活跃状态，设置这个参数为 ``True`` 将强制登录用户。默认值为 ``False``。
     :type force: bool
-    :param fresh: 将该参数设置为 ``False``，将会在登录用户时标记 session 为”不新鲜“状态。默认值为 ``True``。
+    :param fresh: 将该参数设置为 ``False``，将会在登录用户时标记 session 为”不新鲜“。默认值为 ``True``。
     :type fresh: bool
     '''
     if not force and not user.is_active:
@@ -263,7 +263,7 @@ def fresh_login_required(func):
     的 session 不是从“记住我” cookie 中恢复的。
     像改变密码或者邮箱这样的敏感操作应该用这个来保护，以提防 cookie 窃贼的攻击。
 
-    如果用户没有通过认证，:meth:`LoginManager.unauthorized` 像往常一样会被调用。
+    如果用户没有通过认证，:meth:`LoginManager.unauthorized` 像平常一样会被调用。
     如果他们已经通过认证，但 session 是”不新鲜“的，
     它将调用 :meth:`LoginManager.needs_refresh`。（在这种情况下，你将需要提供
     一个 :attr:`LoginManager.refresh_view`。)

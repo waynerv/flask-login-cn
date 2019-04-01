@@ -27,7 +27,7 @@ from .utils import (login_url as make_login_url, _create_identifier,
 
 
 class LoginManager(object):
-    '''这个对象用来保存登录需要的设置。:class:`LoginManager` 的实例 *不会* 绑定到特定程序实例，
+    '''这个对象用来保存登录需要的设置。:class:`LoginManager` 的实例 *不* 限定于特定的程序实例，
     所以你可以在代码的主体部分创建它，然后在工厂函数中绑定到程序实例。
     '''
     def __init__(self, app=None, add_context_processor=True):
@@ -123,7 +123,7 @@ class LoginManager(object):
             - 向用户闪现消息 :attr:`LoginManager.login_message` 。
 
             - 如果应用使用了蓝图将通过 `blueprint_login_views` 找到当前蓝图的登录视图。
-              如果应用没有使用蓝图或者没有指定当前的蓝图的登录视图，
+              如果应用没有使用蓝图或者没有指定当前蓝图的登录视图，
               将使用 `login_view` 的值。
 
             - 重定向用户到登录视图。（用户试图访问的页面地址将会被传递到查询字符串的 ``next`` 变量中，
@@ -240,12 +240,11 @@ class LoginManager(object):
 
             - 向用户闪现消息 :attr:`LoginManager.needs_refresh_message`。
 
-            - 重定向用户到 :attr:`LoginManager.refresh_view`。（用户试图
-              访问的页面地址将会被传递到查询字符串的 ``next`` 变量中，
-	      所以如果验证通过你会重定向到该页面而不是返回首页。）
+            - 重定向用户到 :attr:`LoginManager.refresh_view`。
+              （用户试图访问的页面地址将会被传递到查询字符串的 ``next`` 变量中，
+              git 所以如果验证通过你会重定向到该页面而不是返回首页。）
 
-        如果 :attr:`LoginManager.refresh_view` 未定义，
-	该方法将直接唤起 HTTP 401（Unauthorized）错误。
+        如果 :attr:`LoginManager.refresh_view` 未定义，该方法将直接唤起 HTTP 401（Unauthorized）错误。
 
         该方法应该返回自一个视图或者 before/after_request 函数，否则重定向不会生效。
         '''
