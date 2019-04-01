@@ -148,7 +148,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，比�
 
     login_manager.login_message = u"Bonvolu ensaluti por uzi tiun paĝon."
 
-可以通过设置 `LoginManager.login_message_category` 属性来自定义消息类型::
+可以通过设置 `LoginManager.login_message_category` 属性来自定义信息类型::
 
     login_manager.login_message_category = "info"
 
@@ -168,7 +168,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，比�
 .. Caution::
    这个方法将被弃用；请使用下面的 `~LoginManager.request_loader` 作为替代。
 
-有些场景你想使用 `Authorization` 首部字段来支持 Basic Auth 登录，比如用于 api 请求。你需要提供一个 `~LoginManager.header_loader` 回调函数来支持通过请求的首部字段登录。这个回调函数应该和你的 `~LoginManager.user_loader` 回调函数基本相同，但是它接收一个首部字段值而不是用户 id。例如::
+有些场景你想使用 `Authorization` 首部字段来支持 Basic Auth 登录，比如用于 api 请求。这时你需要提供一个 `~LoginManager.header_loader` 回调函数来支持通过请求的首部字段登录。这个回调函数应该和你的 `~LoginManager.user_loader` 回调函数基本相同，但是它接收一个首部字段值而不是用户 id。例如::
 
     @login_manager.header_loader
     def load_user_from_header(header_val):
@@ -184,14 +184,14 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，比�
 
 使用 Request Loader 自定义登录
 ==============================
-有些场景你想在不使用 cookies 的情况下登录用户，例如使用请求首部或者作为查询参数传递的 api key。在这些情况下，你应该使用 `~LoginManager.request_loader` 回调函数。这个回调函数和 `~LoginManager.user_loader` 回调函数基本相同，但是它接收 Flask 请求而不是用户 id。
+有些场景你想在不使用 cookies 的情况下登录用户，比如使用请求首部或者作为查询参数传递的 api key。在这些情况下，你应该使用 `~LoginManager.request_loader` 回调函数。这个回调函数和 `~LoginManager.user_loader` 回调函数基本相同，但是它接收 Flask 请求而不是用户 id。
 
-例如，为了支持通过 url 参数和使用 `Authorization` 首部字段的 Basic Auth 进行登录::
+例如，为了支持通过 URL 参数和使用 `Authorization` 首部字段的 Basic Auth 进行登录::
 
     @login_manager.request_loader
     def load_user_from_request(request):
 
-        # 首先，尝试通过 api_key url查询参数进行登录
+        # 首先，尝试通过 api_key URL 参数进行登录
         api_key = request.args.get('api_key')
         if api_key:
             user = User.query.filter_by(api_key=api_key).first()
@@ -233,7 +233,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，比�
 
 “记住我”功能的实现可能会很麻烦。但是 Flask-Login 使该过程变得简单明了--你只需要在调用 `login_user` 时传入 ``remember=True`` 即可。一个 cookie 将会保存到用户的电脑，然后 Flask-Login 将会在用户 ID 不在 session 中时自动地从该 cookie 中恢复用户 ID。cookie 的过期时长可以通过 `REMEMBER_COOKIE_DURATION` 配置或者直接将时长传入 `login_user` 来设置。这个 cookie 是防篡改的，所以如果用户篡改了它（如使用别的用户ID来代替自己的），Flask-Login 将不会使用这个 cookie。
 
-这个层级的功能将会自动运行。但是，你能够（如果你的应用将处理任何的敏感数据，则是应该）提供额外的设置来增加记住我 cookie 的安全性。
+这一层级的功能是自动执行的。但是，你能够（如果你的应用将处理任何的敏感数据，则是应该）提供额外的设置来增加记住我 cookie 的安全性。
 
 
 可选令牌值
@@ -244,17 +244,17 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，比�
     def load_user(user_id):
         return User.query.filter_by(alternative_id=user_id).first()
 
-然后用户类的 `~UserMixin.get_id` 方法也要返回另外的 id 而不是用户的主 ID::
+然后用户类的 `~UserMixin.get_id` 方法也应该返回另外的 id 而不是用户的主 ID::
 
     def get_id(self):
         return unicode(self.alternative_id)
 
-这样，当用户更改他们的密码时，你可以将用户另外的 id 更改为一个新的随机生成值，以确保他们原来的验证 session 将不再有效。注意这个另外的 id 依然需要唯一标识用户... 可以把它当成第二个用户 ID。
+这样，当用户更改他们的密码时，你可以将用户另外的 id 更改为一个新的随机生成值，这样会确保他们原来的验证 session 不再有效。注意这个另外的 id 依然需要唯一标识用户... 可以把它当成第二个用户 ID。
 
 
 “新鲜”登录
 ==========
-当一个用户登录时，它的登录 session 会被标记为“新鲜”（译注：在 session 中添加 _fresh 字段），表明他们实际是在该 session 中通过了身份验证。当他们的 session 被销毁然后通过“记住我” cookie 登录回来时，session 会被标记为“不新鲜”。`login_required` 不会区分新鲜状态，对大多数页面来说这样没有问题。然而，类似于更改个人信息这样的敏感操作应该需要“新鲜”登录。（而像修改密码这样的操作不管怎样应该总是需要重新输入原密码。）
+当一个用户登录时，它的登录 session 会被标记为“新鲜”（译注：在 session 中添加 _fresh 字段），表明他们实际是在该 session 中通过了身份认证。当他们的 session 被销毁然后通过“记住我” cookie 登录回来时，session 会被标记为“不新鲜”。`login_required` 不会区分新鲜状态，对大多数页面来说这样没有问题。然而，类似于更改个人信息这样的敏感操作应该需要“新鲜”登录。（而像修改密码这样的操作不管怎样应该总是需要重新输入原密码。）
 
 `fresh_login_required` 除了验证用户已经登录，还将确保他们的登录为“新鲜”状态。如果不是，它会将他们重定向到一个可以重新输入凭证的页面。你可以就像自定义 `login_required` 的方式一样，通过设置 `LoginManager.refresh_view`，`~LoginManager.needs_refresh_message`，以及
 `~LoginManager.needs_refresh_message_category` 自定义这类行为::
@@ -284,8 +284,8 @@ Cookie 的细节可以在应用程序的配置中自定义。
                                        **默认值：** ``remember_token``
 `REMEMBER_COOKIE_DURATION`             cookie 的过期时长，值为 `datetime.timedelta` 对象或整数秒数。
                                        **默认值：** 365天（一个非闰阳历年）
-`REMEMBER_COOKIE_DOMAIN`               如果“记住我”的 cookie 要跨域，在这里设置域名值。(即 ``.example.com`` 将会允许cookie用于所有 ``example.com`` 的子域名） **默认值：** `None`
-`REMEMBER_COOKIE_PATH`                 限制“记住我” cookie 在一个固定的路径。
+`REMEMBER_COOKIE_DOMAIN`               如果“记住我”的 cookie 要跨域，在这里设置域名值。(即 ``.example.com`` 将会允许 cookie 用于所有 ``example.com`` 的子域名） **默认值：** `None`
+`REMEMBER_COOKIE_PATH`                 限制“记住我” cookie 到一个固定的路径。
                                        **默认值：** ``/``
 `REMEMBER_COOKIE_SECURE`               限制“记住我” cookie 仅作用于加密通道（通常是HTTPS）。
                                        **默认值：** `None`
@@ -444,11 +444,11 @@ API 文档
 
 .. data:: user_logged_in
 
-   在用户登录后发送。除了程序实例以外（作为 sender 参数，信号的发送者），还会传入 `user` 参数，即被登录的用户。
+   在用户登录后发送。除了程序实例（信号的发送者）以外，还会传入被登录的 `用户对象`。
 
 .. data:: user_logged_out
 
-   在用户注销后发送。除了程序实例以外（作为 sender 参数，信号的发送者），还会传入 `user` 参数，即被注销的用户。
+   在用户注销后发送。除了程序实例（信号的发送者）以外，还会传入被注销的 `用户对象`。
 
 .. data:: user_login_confirmed
 
