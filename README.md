@@ -1,24 +1,18 @@
 # Flask-Login 简体中文文档
 
-## 关于译者
-
-由 Waynerv 发起并独立翻译。
-
-Initiate and translated by Waynerv.
-
 ## 版本
 
-Flask-Login 0.4.1 当前最新版本。
+基于 Flask-Login 0.4.1 当前最新版本翻译。
 
 ## 线上地址
 
-
+[https://flask-login-cn.readthedocs.io/zh/latest/](https://flask-login-cn.readthedocs.io/zh/latest/)
 
 ## 制作本地文档
 
 ### Html 文档
 
-主要步骤为：
+主要步骤：
 
 * 克隆本项目
 * 创建虚拟环境（示例使用pipenv）
@@ -35,6 +29,13 @@ cd docs/
 make html
 ```
 
+也可不使用虚拟环境直接使用 `pip` 与项目根目录的 [requirements.txt](requirements.txt) 完成依赖安装。
+
 ### markdown 文档
 
 见 [Flask-Login-cn.md](Flask-Login-cn.md)
+
+
+## 关于译者
+
+由 Waynerv 出于兴趣翻译。水平有限，若有翻译不当之处敬请谅解，并欢迎指出。
