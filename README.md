@@ -37,4 +37,4 @@ make html
 
 ### markdown 文档
 
-见 docs/Flask-Login-cn.md
+见 [Flask-Login-cn.md](Flask-Login-cn.md)
