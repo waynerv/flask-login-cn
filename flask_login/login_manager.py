@@ -27,9 +27,8 @@ from .utils import (login_url as make_login_url, _create_identifier,
 
 
 class LoginManager(object):
-    '''这个对象用来保存登录需要的设置。:class:`LoginManager` 的
-    实例*不会*绑定到特定程序实例，所以你可以在代码的主体部分创建它，
-    然后在工厂函数中绑定到程序实例。
+    '''这个对象用来保存登录需要的设置。:class:`LoginManager` 的实例 *不会* 绑定到特定程序实例，
+    所以你可以在代码的主体部分创建它，然后在工厂函数中绑定到程序实例。
     '''
     def __init__(self, app=None, add_context_processor=True):
         #: 一个创建匿名用户的类或者工厂函数，在未登录时使用。

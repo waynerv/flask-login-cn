@@ -139,6 +139,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，比�
 自定义登录流程
 ==============
 默认情况下，当一个未登录的用户试图访问一个 `login_required` 的视图时，Flask-Login 将会闪现一条信息并将用户重定向到登录视图。（如果没有设置登录视图，将会报401错误）
+
 登录视图的名称（译注：URL 或端点）应该被设置为 `LoginManager.login_view`。例如::
 
     login_manager.login_view = "users.login"
@@ -253,7 +254,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，比�
 
 “新鲜”登录
 ==========
-当一个用户登录时，它的登录 session 会被标记为“新鲜”（译注：在session中添加 _fresh 字段），表明他们实际是在该 session 中通过了身份验证。当他们的 session 被销毁然后通过“记住我” cookie 登录回来时，session 会被标记为“不新鲜”。`login_required` 不会区分新鲜状态，对大多数页面来说这样没有问题。然而，类似于更改个人信息这样的敏感操作应该需要“新鲜”登录。（而像修改密码这样的操作不管怎样应该总是需要重新输入原密码。）
+当一个用户登录时，它的登录 session 会被标记为“新鲜”（译注：在 session 中添加 _fresh 字段），表明他们实际是在该 session 中通过了身份验证。当他们的 session 被销毁然后通过“记住我” cookie 登录回来时，session 会被标记为“不新鲜”。`login_required` 不会区分新鲜状态，对大多数页面来说这样没有问题。然而，类似于更改个人信息这样的敏感操作应该需要“新鲜”登录。（而像修改密码这样的操作不管怎样应该总是需要重新输入原密码。）
 
 `fresh_login_required` 除了验证用户已经登录，还将确保他们的登录为“新鲜”状态。如果不是，它会将他们重定向到一个可以重新输入凭证的页面。你可以就像自定义 `login_required` 的方式一样，通过设置 `LoginManager.refresh_view`，`~LoginManager.needs_refresh_message`，以及
 `~LoginManager.needs_refresh_message_category` 自定义这类行为::
