@@ -38,7 +38,7 @@ Flask-Login 为 Flask 提供对用户 session 的管理。它能够处理登录�
 
     login_manager = LoginManager()
 
-login manager 包含让你的应用和 Flask-Login 一起工作的代码，例如如何通过 ID 加载用户，在用户需要登录时将用户跳转到何处等等。
+login manager 包含让你的应用和 Flask-Login 一起工作的代码，比如如何通过 ID 加载用户，在用户需要登录时将用户跳转到何处等等。
 
 实际的应用对象被创建之后，你能够通过以下代码配置应用的登录功能（译注：即注册扩展到应用实例）::
 
@@ -58,7 +58,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
         return User.get(user_id)
 
 如果 ID 无效，函数应该返回 `None` (**而不是唤起异常**) 。
-这样 ID 将从 session 中被手动移除且程序可以继续执行。）
+（这样 ID 将从 session 中被手动移除且程序可以继续执行。）
 
 定义用户类
 ==========
@@ -132,14 +132,14 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
         logout_user()
         return redirect(somewhere)
 
-用户将会被注销，并且任何保存他们 session 的 cookie 都会被清理。
+用户将会被注销，并且任何保存他们 session 的 cookie 都会被清理。（译注：从 session 中删除用户 id 等字段）
 
 
 
 自定义登录流程
 ==============
 默认情况下，当一个未登录的用户试图访问一个 `login_required` 的视图时，Flask-Login 将会闪现一条信息并将用户重定向到登录视图。（如果没有设置登录视图，将会报401错误）
-登录视图的名称（译注：url 或端点）应该被设置为 `LoginManager.login_view`。例如::
+登录视图的名称（译注：URL 或端点）应该被设置为 `LoginManager.login_view`。例如::
 
     login_manager.login_view = "users.login"
 
@@ -151,7 +151,7 @@ login manager 包含让你的应用和 Flask-Login 一起工作的代码，例�
 
     login_manager.login_message_category = "info"
 
-重定向到登录视图后，（当前url）查询字符串中会有一个 ``next`` 变量，变量中保存着用户试图访问的页面地址。如果 `USE_SESSION_FOR_NEXT` 配置参数为 `True`，试图访问的页面地址将会保存在 session 的 ``next`` 键中。
+重定向到登录视图后，（当前 URL）查询字符串中会有一个 ``next`` 变量，变量中保存着用户试图访问的页面地址。如果 `USE_SESSION_FOR_NEXT` 配置参数为 `True`，试图访问的页面地址将会保存在 session 的 ``next`` 键中。
 
 如果你想更进一步的自定义流程，用 `LoginManager.unauthorized_handler` 来装饰处理函数::
 
