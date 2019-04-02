@@ -242,7 +242,7 @@ class LoginManager(object):
 
             - 重定向用户到 :attr:`LoginManager.refresh_view`。
               （用户试图访问的页面地址将会被传递到查询字符串的 ``next`` 变量中，
-              git 所以如果验证通过你会重定向到该页面而不是返回首页。）
+              所以如果验证通过你会重定向到该页面而不是返回首页。）
 
         如果 :attr:`LoginManager.refresh_view` 未定义，该方法将直接唤起 HTTP 401（Unauthorized）错误。
 

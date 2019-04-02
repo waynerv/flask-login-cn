@@ -35,7 +35,7 @@ make html
 pip install -r requirements.txt
 ```
 
-### markdown 文档
+### Markdown 文档
 
 见 [Flask-Login-cn.md](Flask-Login-cn.md)
 
