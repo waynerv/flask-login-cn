@@ -21,7 +21,7 @@ Flask-Login 为 Flask 提供对用户 session 的管理。它能够处理登录�
   - [安装](#安装)
   - [配置你的应用程序](#配置你的应用程序)
   - [如何开始工作](#如何开始工作)
-  - [你的用户类](#你的用户类)
+  - [定义用户类](#定义用户类)
   - [登录示例](#登录示例)
   - [自定义登录流程](#自定义登录流程)
   - [使用 Autherization 首部字段登录](#使用-autherization-首部字段登录)
@@ -80,7 +80,7 @@ def load_user(user_id):
 
 如果 ID 无效，函数应该返回 [None](https://docs.python.org/3/library/constants.html#None)（**而不是唤起异常**）。（这样 ID 将从 session 中被手动移除且程序可以继续执行。）
 
-## 你的用户类
+## 定义用户类
 你用来表示用户的类需要实现以下属性和方法：
 
 `is_authenticated`
@@ -296,8 +296,9 @@ def refresh():
 
 Cookie 的细节可以在应用程序的配置中自定义。
 
-| REMEMBER_COOKIE_NAME                     | 储存“记住我”信息的 cookie 名称。**默认值：**`remember_token` |
+| 配置变量                                 | 用途                                                         |
 | ---------------------------------------- | ------------------------------------------------------------ |
+| **REMEMBER_COOKIE_NAME**                 | 储存“记住我”信息的 cookie 名称。**默认值：**`remember_token` |
 | **REMEMBER_COOKIE_DURATION**             | cookie 的过期时长，值为 [datetime.timedelta](https://docs.python.org/3/library/datetime.html#datetime.timedelta)对象或整数秒数。**默认值：**365天（一个非闰阳历年） |
 | **REMEMBER_COOKIE_DOMAIN**               | 如果“记住我”的 cookie 要跨域，在这里设置域名值（即`.example.com`将会允许cookie用于所有`example.com`的子域名）**默认值：**[None](https://docs.python.org/3/library/constants.html#None) |
 | **REMEMBER_COOKIE_PATH**                 | 限制“记住我” cookie 在一个固定的路径。**默认值：**/          |
@@ -364,15 +365,15 @@ def user_loaded_from_header(self, user=None):
 
 ### 登录配置
 
-*class* `flask_login.``LoginManager`(*app=None*, *add_context_processor=True*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager)
+*class* `flask_login`**.LoginManager**(*app=None*, *add_context_processor=True*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager)
 
 这个对象用来保存登录需要的设置。[LoginManager](https://flask-login-cn.readthedocs.io/zh/latest/#flask_login.LoginManager) 的实例**不**限定于特定的程序实例，所以你可以在代码的主体部分创建它，然后在工厂函数中绑定到程序实例。
 
-- `setup_app`(*app*, *add_context_processor=True*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.setup_app)
+- **setup_app**(*app*, *add_context_processor=True*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.setup_app)
 
   这个方法已经被弃用。请使用 `LoginManager.init_app()` 作为代替。
 
-- `unauthorized`()[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.unauthorized)
+- **unauthorized()**[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.unauthorized)
 
   这个方法会在用户被要求登录的时候调用。如果你使用 [LoginManager.unauthorized_handler](https://flask-login-cn.readthedocs.io/zh/latest/#flask_login.LoginManager.unauthorized_handler) 注册了回调函数，被调用的会是这个回调函数（译注：首先调用 unauthorized() ，然后跳过后续代码直接返回并调用该回调函数）。否则，它将执行下列行为：
 
@@ -383,7 +384,7 @@ def user_loaded_from_header(self, user=None):
   如果 [LoginManager.login_view](https://flask-login-cn.readthedocs.io/zh/latest/#flask_login.LoginManager.login_view) 未定义，该方法将直接唤起 HTTP 401（Unauthorized）错误。
   该方法应该返回自一个视图或者 before/after_request 函数，否则重定向不会生效。（译注：这样才会有有效的 `next` 值。）
 
-- `needs_refresh`()[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.needs_refresh)
+- **needs_refresh()**[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.needs_refresh)
 
   当用户已经登录但因为登录 session ”不新鲜“而需要重新认证时，该方法将被调用。如果你使用 [needs_refresh_handler](https://flask-login-cn.readthedocs.io/zh/latest/index.html#flask_login.LoginManager.needs_refresh_handler) 注册了回调函数，该回调函数将被调用（译注：过程同上）。否则它将执行下列行为：
    - 向用户闪现消息 [LoginManager.needs_refresh_message](https://flask-login-cn.readthedocs.io/zh/latest/#flask_login.LoginManager.needs_refresh_message)
@@ -394,17 +395,17 @@ def user_loaded_from_header(self, user=None):
 
 **常规配置**
 
-- `user_loader`(*callback*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.user_loader)
+- **user_loader**(*callback*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.user_loader)
 
   用来设置从 session 中重载用户的回调函数。被设置的函数应该接收一个用户 ID（`unicode`）并返回一个用户对象，如果用户不存在的话返回 `None`。
-  
+
   **参数：** **callback**（[callable](https://docs.python.org/3/library/functions.html#callable)）——用来取回用户对象的回调函数。
 
-- `header_loader`(*callback*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.header_loader)
+- **header_loader**(*callback*)[[source\]](https://flask-login-cn.readthedocs.io/zh/latest/_modules/flask_login/login_manager.html#LoginManager.header_loader)
 
   该函数已被废弃，请使用 **LoginManager.request_loader()** 作为代替。
   用来设置通过请求头的值加载用户的回调函数。被设置的函数应该接收一个认证令牌并返回一个用户对象，如果用户不存在的话返回 `None`。
-  
+
   **参数：** **callback**（[callable](https://docs.python.org/3/library/functions.html#callable)）——用来取回用户对象的回调函数。
 
 - **anonymous_user**
